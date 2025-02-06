@@ -130,16 +130,6 @@ function updateMessage(messageId, updates) {
     if (errorOverlay) {
       errorOverlay.remove();
     }
-
-    if (updates.error) {
-      const errorOverlay = document.createElement('div');
-      errorOverlay.className = 'error-overlay';
-      errorOverlay.textContent = '上传失败';
-      const fileWrapper = messageElement.querySelector('.file-wrapper');
-      if (fileWrapper) {
-        fileWrapper.appendChild(errorOverlay);
-      }
-    }
   }
 }
 
@@ -297,6 +287,7 @@ fileInput.addEventListener('change', async (e) => {
       const result = e.target?.result;
       if (!result) return;
 
+      // 先显示加载中的消息
       appendMessage({
         id: messageId,
         type: fileType,
@@ -308,14 +299,13 @@ fileInput.addEventListener('change', async (e) => {
       });
 
       try {
-        console.log('开始上传文件:', file.name, '大小:', file.size, '类型:', file.type);
-        
         const uploadData = {
           filename: file.name,
           contentType: file.type,
           data: result.toString().split(',')[1]
         };
 
+        // 上传文件
         const response = await fetch('/api/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -323,10 +313,9 @@ fileInput.addEventListener('change', async (e) => {
         });
 
         const json = await response.json();
-        console.log('上传响应:', json);
         
         if (json.success && json.url) {
-          console.log('文件上传成功:', json.url);
+          // 创建消息对象
           const message = {
             id: messageId,
             type: fileType,
@@ -337,8 +326,10 @@ fileInput.addEventListener('change', async (e) => {
             mimeType: json.mimeType
           };
           
+          // 写入KV存储
           await saveToKV(message);
           
+          // 更新消息显示
           updateMessage(messageId, {
             content: json.url,
             loading: false,
@@ -346,8 +337,7 @@ fileInput.addEventListener('change', async (e) => {
             mimeType: json.mimeType
           });
         } else {
-          console.error('文件上传失败:', json.error || '未知错误');
-          throw new Error(json.error || 'Upload failed');
+          throw new Error(json.error || '文件上传失败');
         }
       } catch (error) {
         console.error('文件上传过程中出错:', error);
@@ -363,6 +353,25 @@ fileInput.addEventListener('change', async (e) => {
     fileInput.value = '';
   }
 });
+
+// 保存到KV的函数
+async function saveToKV(message) {
+  try {
+    const response = await fetch('/api/save-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to save to KV');
+    }
+  } catch (error) {
+    console.error('Error saving to KV:', error);
+  }
+}
 
 function getFileType(mimeType) {
   const type = mimeType.split('/')[0];
