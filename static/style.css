@@ -116,13 +116,6 @@ body {
   gap: 10px; /* 头像和内容间距 */
 }
 
-/* 专门为图片消息创建新的样式 */
-.message.ai .message-bubble.image-message {
-  background: none;
-  border: none;
-  padding: 0;
-}
-
 .ai-nickname {
   font-size: 12px;
   color: #666;
@@ -207,14 +200,12 @@ body {
 }
 
 .chat-panel__input {
-  height: 120px; /* 降低默认高度 */
+  height: 160px;
   border-top: 1px solid #E6E6E6;
   display: flex;
   flex-direction: column;
   background: #F6F6F6;
-  padding: 12px; /* 添加内边距 */
 }
-
 
 .chat-panel__input-operations {
   padding: 10px;
@@ -278,25 +269,55 @@ body {
 }
 
 .chat-send__button {
+  padding: 8px 20px;
   background: #07C160;
-  border: none;
-  color: white;
-  padding: 8px 16px;
+  color: #fff;
   border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-  margin-left: 10px;
+  text-decoration: none;
+  font-size: 14px;
 }
 
 .chat-send__button:hover {
   background: #06ae56;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-/* 新增禁用状态样式 */
-.chat-send__button:disabled {
-  background: #cccccc;
-  cursor: not-allowed;
+
+@media (min-width: 769px) {
+  .chat-window {
+    min-width: 600px;
+    max-width: 800px;
+  }
 }
+
+/* 新增上传加载动画 */
+ .upload-loading {
+     width: 24px;
+     height: 24px;
+     border: 3px solid #f3f3f3;
+     border-top: 3px solid #07C160;
+     border-radius: 50%;
+     animation: spin 1s linear infinite;
+ }
+
+ @keyframes spin {
+     0% { transform: rotate(0deg); }
+     100% { transform: rotate(360deg); }
+ }
+
+ .loading-overlay {
+     position: absolute;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background: rgba(255, 255, 255, 0.8);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     border-radius: 8px;
+ }
+
+
+
 
 /* 新增 "..." 动画样式 */
 .loading-dots {
@@ -326,176 +347,6 @@ body {
   animation-delay: 1s; /*  第三个点延迟 1 秒启动动画  */
 }
 
-.file-wrapper {
-  padding: 10px;
-  border-radius: 4px;
-  margin: 5px 0;
-}
-
-.file-icon {
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-.file-icon svg {
-  fill: none;
-  stroke: #666;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.file-name {
-  vertical-align: middle;
-  color: #333;
-  text-decoration: underline;
-}
-
-.file-wrapper a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-}
-
-.file-wrapper:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.file-icon {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-audio, video {
-  border-radius: 4px;
-  margin: 5px 0;
-}
-
-/* 图片容器 */
-.image-container {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-}
-
-/* 加载蒙版 */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* 加载动画 */
-.spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* 错误蒙版 */
-.error-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.error-icon {
-  font-size: 24px;
-  color: #ff0000;
-  background: white;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-/* 输入框和按钮样式 */
-#messageInput {
-  height: 48px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-#sendButton {
-  background: #007bff;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  transition: background 0.3s;
-}
-
-#sendButton:hover {
-  background: #0056b3;
-}
-
-/* AI头像样式 */
-.ai-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.ai-nickname {
-  color: #666;
-  font-size: 0.9em;
-}
-
-/* 加载动画 */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255,255,255,0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 @keyframes dot-pulse {
   0% {
     opacity: 0;
@@ -509,33 +360,4 @@ audio, video {
     opacity: 0;
     transform: scale(0.8);
   }
-}
-
-/* 添加图片最大宽度限制 */
-.image-container img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-}
-
-/* 优化移动端输入框高度 */
-@media (max-width: 768px) {
-  .chat-panel__input {
-    height: 120px;
-  }
-}
-
-/* 添加消息加载时的占位符样式 */
-.message-loading {
-  min-height: 40px;
-  background: #f0f0f0;
-  border-radius: 4px;
-  margin: 10px 0;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
 }

@@ -47,19 +47,19 @@ function appendMessage(message) {
         const loadingOverlay = document.createElement('div');
         loadingOverlay.className = 'loading-overlay';
         const spinner = document.createElement('div');
-        spinner.className = 'spinner';
+        spinner.className = 'upload-loading'; // 修改为新的动画样式
         loadingOverlay.appendChild(spinner);
         imageContainer.appendChild(loadingOverlay);
       }
 
-      if (message.error) {
+      if (updates.error) {
         const errorOverlay = document.createElement('div');
         errorOverlay.className = 'error-overlay';
-        const errorIcon = document.createElement('div');
-        errorIcon.className = 'error-icon';
-        errorIcon.innerHTML = '❌';
-        errorOverlay.appendChild(errorIcon);
-        imageContainer.appendChild(errorOverlay);
+        errorOverlay.innerHTML = `
+          <div class="error-icon">❌</div>
+          <div class="error-text">上传失败: ${updates.errorMessage || ''}</div>
+        `; // 添加错误信息展示
+        messageElement.querySelector('.image-container').appendChild(errorOverlay);
       }
       contentWrapper.appendChild(imageContainer);
       break;
