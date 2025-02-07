@@ -19,7 +19,17 @@ function appendMessage(message) {
 
   const contentWrapper = document.createElement('div');
   contentWrapper.className = message.type === 'text' ? 'message-bubble' : 'file-wrapper';
-
+  if (message.role === 'ai') {
+    const avatar = document.createElement('img');
+    avatar.className = 'ai-avatar';
+    avatar.src = '/static/image/ai-avatar.png';
+    const nickname = document.createElement('span');
+    nickname.className = 'ai-nickname';
+    nickname.textContent = 'DeepSeek';
+    metaContainer.appendChild(avatar);
+    metaContainer.appendChild(nickname);
+  }
+  
   switch (message.type) {
     case 'text':
       contentWrapper.textContent = message.content;
@@ -99,15 +109,20 @@ function updateMessage(messageId, updates) {
 
   if (updates.content) {
     const contentElement = messageElement.querySelector('img, video, audio');
-    if (contentElement instanceof HTMLImageElement || 
-        contentElement instanceof HTMLVideoElement || 
-        contentElement instanceof HTMLAudioElement) {
+    if (contentElement) {
       contentElement.src = updates.content;
     }
 
+    // 修复文件链接更新
     const fileLink = messageElement.querySelector('a');
     if (fileLink) {
       fileLink.href = updates.content;
+      if (updates.filename) {
+        const fileName = fileLink.querySelector('.file-name');
+        if (fileName) {
+          fileName.textContent = updates.filename;
+        }
+      }
     }
   }
 
@@ -125,10 +140,17 @@ function updateMessage(messageId, updates) {
     }
   }
 
+  // 修复错误状态更新
   if (typeof updates.error !== 'undefined') {
     const errorOverlay = messageElement.querySelector('.error-overlay');
     if (errorOverlay) {
       errorOverlay.remove();
+    }
+    if (updates.error) {
+      const errorOverlay = document.createElement('div');
+      errorOverlay.className = 'error-overlay';
+      errorOverlay.innerHTML = '❌ 上传失败';
+      messageElement.querySelector('.image-container').appendChild(errorOverlay);
     }
   }
 }
@@ -246,11 +268,10 @@ async function sendTextMessage() {
 }
 
 function removeLoadingMessage() {
-  const loadingMessages = document.querySelectorAll('.message.ai .loading-dots');
-  if (loadingMessages.length > 0) {
-    const lastLoadingMessage = loadingMessages[loadingMessages.length - 1];
-    lastLoadingMessage.closest('.message').remove();
-  }
+  const loadingMessages = document.querySelectorAll('.message.ai .loading-overlay');
+  loadingMessages.forEach(loader => {
+    loader.closest('.message').remove();
+  });
 }
 
 if (deepseekButton) {
@@ -334,7 +355,8 @@ fileInput.addEventListener('change', async (e) => {
             content: json.url,
             loading: false,
             filename: json.filename,
-            mimeType: json.mimeType
+            mimeType: json.mimeType,
+            error: false // 明确设置错误状态为false
           });
         } else {
           throw new Error(json.error || '文件上传失败');
@@ -343,7 +365,8 @@ fileInput.addEventListener('change', async (e) => {
         console.error('文件上传过程中出错:', error);
         updateMessage(messageId, {
           loading: false,
-          error: true
+          error: true,
+          errorMessage: error.message // 添加错误信息
         });
       }
     };
