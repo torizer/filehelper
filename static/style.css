@@ -288,37 +288,6 @@ body {
   }
 }
 
-/* 新增上传加载动画 */
- .upload-loading {
-     width: 24px;
-     height: 24px;
-     border: 3px solid #f3f3f3;
-     border-top: 3px solid #07C160;
-     border-radius: 50%;
-     animation: spin 1s linear infinite;
- }
-
- @keyframes spin {
-     0% { transform: rotate(0deg); }
-     100% { transform: rotate(360deg); }
- }
-
- .loading-overlay {
-     position: absolute;
-     top: 0;
-     left: 0;
-     right: 0;
-     bottom: 0;
-     background: rgba(255, 255, 255, 0.8);
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     border-radius: 8px;
- }
-
-
-
-
 /* 新增 "..." 动画样式 */
 .loading-dots {
     display: inline-flex;

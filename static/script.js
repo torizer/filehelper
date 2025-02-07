@@ -22,7 +22,7 @@ function appendMessage(message) {
   if (message.role === 'ai') {
     const avatar = document.createElement('img');
     avatar.className = 'ai-avatar';
-    avatar.src = '/static/image/ai-avatar.png';
+    avatar.src = 'https://chat.deepseek.com/favicon.svg';
     const nickname = document.createElement('span');
     nickname.className = 'ai-nickname';
     nickname.textContent = 'DeepSeek';
